@@ -1,20 +1,532 @@
 <!DOCTYPE html>
-
-
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Isle: Bosch-Island | Pack OCR Map Tracker</title>
+<meta name="description" content="Find your friends in The Isle. Join a room, press Tab, and see everyone's location on a shared live map. Free, no installs needed. Works in Chrome and Edge.">
+<meta name="keywords" content="The Isle, Isle tracker, dinosaur game, multiplayer map, live map, position tracker, find friends, The Isle Evrima">
+<meta property="og:title" content="Live Isle Tracker">
+<meta property="og:description" content="Find your friends in The Isle. Join a room, press Tab, and see everyone's location on a shared live map. No installs needed.">
+<meta property="og:image" content="https://liveisletracker.github.io/main.png">
+<meta property="og:url" content="https://liveisletracker.github.io">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Live Isle Tracker">
+<meta name="twitter:description" content="Find your friends in The Isle. Join a room, press Tab, and see everyone's location on a shared live map.">
+<meta name="twitter:image" content="https://liveisletracker.github.io/main.png">
+<link rel="canonical" href="https://liveisletracker.github.io">
+<meta name="google-site-verification" content="WAEEW2K0KRlRImLEyWVK6ZjvmX0SgVGwf1g_uzwzoCI" />
 <style>
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #100a17 ;
+    color: #56dd56;
+    font-family: 'Fredoka One', 'Courier New', monospace;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── Lobby ── */
+  #lobby {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-y: auto;
+    padding: 20px 0;
+  }
+  .lobby-card {
+    background: #100a17 ;
+    border: 1.5px solid #02ffea;
+    border-radius: 8px;
+    padding: 40px;
+    width: 1000px;
+    text-align: center;
+  }
+  .lobby-card h1 {
+    font-size: 18px;
+    color: #5ccfe6;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+  .lobby-card .subtitle {
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+
+      background: linear-gradient(45deg, #00ffff, #4c00ff, #00ffff);
+      background-size: 300% 300%;
+      animation: gradientShift2 8s ease-in-out infinite;
+
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+
+  .lobby-card input {
+      background: #100a17;
+
+      background-image: linear-gradient(45deg, #00ffff, #4c00ff, #00ffff);
+      background-size: 300% 300%;
+      animation: gradientShift2 8s ease-in-out infinite;
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+
+
+      padding: 10px 14px;
+      width: 100%;
+      margin-bottom: 12px;
+
+      font-family: inherit;
+      font-size: 14px;
+      border-radius: 4px;
+      text-align: center;
+
+      border: 1.5px solid #02ffea;
+  }
+
+
+  .lobby-card input:focus { outline: none; border: 1.5px solid #02ffea; }
+  .lobby-card input::placeholder { color: #334; }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .btn {
+    flex: 1;
+    background: #100a17;
+    color: #5ce668;
+      border: 1.5px solid #02ffea;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    transition: background 0.15s;
+  }
+  .btn:hover { background: #100a17; }
+  .btn-danger {
+    background: #100a17;
+    border-color: #6a2a2a;
+    color: #e06c75;
+  }
+  .btn-danger:hover { background: #100a17 ; }
+
+  .btn2 {
+      flex: 1;
+      background: #100a17;
+
+      /* ❌ remove this (invalid) */
+      color: transparent;
+
+      background-image: linear-gradient(45deg, #00ffff, #4c00ff, #00ffff);
+      background-size: 300% 300%;
+      animation: gradientShift2 8s ease-in-out infinite;
+
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      border: 1.5px solid #02ffea;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      transition: transform 0.15s;
+  }
+
+  .btn2:hover {       
+      flex: 1;
+      background: #100a17;
+
+      /* ❌ remove this (invalid) */
+      color: transparent;
+
+      background-image: linear-gradient(45deg, #00ffff, #4c00ff, #00ffff);
+      background-size: 300% 300%;
+      animation: gradientShift2 8s ease-in-out infinite;
+
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      border: 1.5px solid #02ffea;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      transition: transform 0.15s; 
     }
+  .btn2-danger {
+    background: #100a17;
+    border-color: #6a2a2a;
+    color: #e06c75;
+  }
+  .btn2-danger:hover { background: #301111 ; }
+  #join-section {
+    display: none;
+    margin-top: 12px;
+  }
+  #join-section input {
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 6px;
+    font-weight: bold;
+  }
+  #lobby-error {
+    color: #e06c75;
+    font-size: 12px;
+    margin-top: 12px;
+    min-height: 18px;
+  }
 
-</style></head>
+  /* ── Tracker ── */
+  #tracker { display: none; height: 100vh; flex-direction: column; }
+  #tracker.active { display: flex; }
+  #lobby.hidden { display: none; }
+
+  #header {
+    background: #100a17 ;
+    border-bottom: 1.5px solid #02ffea;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 16px;
+    min-height: 34px;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  #header h1 {
+      flex: 1;
+      background: #100a17;
+
+      /* ❌ remove this (invalid) */
+      color: transparent;
+
+      background-image: linear-gradient(45deg, #00ffff, #4c00ff, #00ffff);
+      background-size: 300% 300%;
+      animation: gradientShift2 6s ease-in-out infinite;
+
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding: 1;
+      margin: 0;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      transition: transform 0.15s;
+  }
+  .room-badge {
+    background: #100a17 ;
+    border: 1.5px dotted #ff0202c0;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #db109e;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .room-badge:hover { border-color: #1fc6fa; }
+  .room-badge .copy-hint {
+    font-size: 12px;
+    color: #1fc6fa;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+  #status {
+    font-size: 12px;
+    color: #f09917;
+  }
+  #connection-status {
+    font-size: 11px;
+    color: #79e06c;
+    margin-left: 8px;
+  }
+
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  #map-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  #canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+  }
+  #canvas:active { cursor: grabbing; }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: 280px;
+    background: #100a17 ;
+    border: 1.5px solid #02ffea;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .panel {
+    border: 1.5px solid #02ffea;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .panel-title {
+    background: #100a17 ;
+    padding: 6px 10px;
+    font-size: 11px;
+    color: #5ccfe6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-body {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  /* Player list */
+  .player-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+  .player-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .player-name {
+    flex: 1;
+    /*overflow: hidden;*/
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .player-coords {
+    color: #5ccfe6;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .player-stale { opacity: 0.4; }
+
+  /* Coord display */
+  .coord-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .coord-label { color: #8c32df; font-size: 14px;}
+  .coord-value { color: #5ccfe6; font-size: 14px; }
+
+  /* OCR dot */
+  .ocr-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 6px;
+    vertical-align: center;
+    background: #100a17 #555;
+  }
+  .ocr-dot.active { background:  #4cd14c; box-shadow: 0 0 6px #5ccfe6; }
+  .ocr-dot.stale { background:  #f0c674; }
+  .ocr-dot.offline { background:  #555; }
+
+  /* Live indicator dot */
+  .live-badge {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .live-badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #790616 ;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 6px #cc0000;
+    animation: live-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px #cc0000; }
+    50% { opacity: 0.4; box-shadow: 0 0 2px #cc0000; }
+  }
 
 
+  .sidebar-btn {
+    background: #100a17 ;
+    color: #5ccfe6;
+    border: 1.5px solid #02ffea;
+    padding: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center;
+    transition: background 0.15s;
+  }
+  .sidebar-btn:hover { background: #100a17 ; }
+  .sidebar-btn.active-capture {
+    background: #100a17 ;
+    border-color: #2a6a3a;
+    color: #98c379;
+  }
 
-    <div style="
+  #leave-btn {
+    margin-top: auto;
+  }
+
+  .detecting {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── Region Selection Overlay ── */
+  #region-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #100a17;
+    
+    cursor: crosshair;
+  }
+  #region-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+@keyframes gradientShift2 {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.hero-subtitles {
+    display: inline-block;
+
+    background: linear-gradient(45deg, #00ffff, #4c00ff, #00ffff);
+    background-size: 300% 300%; /* 🔥 makes it move */
+
+    animation: gradientMove 1s ease infinite, heroBadgePulse 2s ease-in-out infinite, gradientShift2 8s ease-in-out infinite;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    color: #ffffff;
+
+    -webkit-text-stroke: 1px rgba(140, 0, 255, 0.9);
+
+    text-shadow:
+        0 0 4px rgba(140, 0, 255, 0.6),
+        0 0 8px rgba(140, 0, 255, 0.4);
+
+    border: 2px solid rgba(140, 0, 255, 0.6);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 8px 25px rgba(140, 0, 255, 0.25);
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+/* ✨ HOVER = AQUA */
+.hero-subtitles:hover {
+    border-color: rgba(0, 0, 0, 0.7);
+
+    /* ✅ ONLY change the color variable */
+    --grad2: #eaffff;
+
+    transform: translateY(-2px);
+
+    -webkit-text-stroke: 1px rgb(0, 0, 0);
+
+    text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.6),
+        0 0 8px rgba(0, 0, 0, 0.4);
+
+    border: 2px solid rgba(0, 0, 0, 0.6);
+
+    box-shadow: 
+        inset 0 1px 0 rgba(0, 0, 0, 0.15),
+        0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.gloss {
+  position: relative;
+  overflow: hidden;
+
+  background: rgba(10, 10, 14, 0.6);
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(0, 255, 255, 0.15);
+}
+.gloss::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 60%
+  );
+
+  transform: rotate(10deg);
+  pointer-events: none;
+}
+
+ 
+</style>
+</head>
+<body>
+
+<div style="
     background:#11111100;
     padding:20px;
     border-radius:12px;
@@ -194,252 +706,16 @@
     });
 </script>
 
-
-
-
-
-    
-    <!-- Hero Section 
-    <section class="hero" id="home" role="banner">
-        <div class="hero-slider">
-            <div class="hero-slide active"></div>
-            <div class="hero-slide"></div>
-            <div class="hero-slide"></div>
-            <div class="hero-slide"></div>
-        </div>
-        <div class="floating-elements">
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-        </div>
-        <div class="hero-content">
-
-            <h1 class="hero-title">
-                <span class="typing-text" data-text="Midnight Bun Studios"> </span>
-            </h1>
-            <div class="hero-subtitles">🧑‍💻 | Fan Made Studio Projects</div>
-            <div class="hero-subtitles">🍪 | STUDIO STATUS ✅ - BETA TESTING </div>
-            <h2 class="hero-subtitles">Current Focus | Building the Team</h2>
-            <h2 class="hero-subtitles">Current Projects | The Isle OCR Tracker</h2>
-            <p class="hero-description">
-            FIND YOUR FRIENDS IN-GAME<br />
-            HOW IT WORKS:<br />
-            Step 1. <br />
-            Enter your in-game name and click Create.<br />
-            Step 2. <br />
-            Share the 6-letter room code with friends.<br />
-            Step 3. <br />
-            Click Share Screen and select your game window.<br />
-            Step 4. <br />
-            Press Tab — waypoints automatically appear.<br />
-            <br />
-            <big>If you Need assistance Ask Staff Members</big>
-            
-            </p>
-            <div class="hero-buttons">
-                <a href="#how-it-works" class="btn btn-dark cta-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Join our Discord server to get started">
-                    <i class="fab fa-discord" aria-hidden="true"></i>
-                        <span>Get Started</span>
-                    <div class="btn-shine" aria-hidden="true"></div>
-                </a>
-                    <a href="#team" class="btn btn-secondary btn-secondary" aria-label="Learn more about how to get started">
-                        <i class="fas fa-info-circle" aria-hidden="true"></i>
-                        <span>Meet The Team</span>
-                        <div class="btn-shine" aria-hidden="true"></div>
-                    </a>
-            </div>
-        </div>
-    </section>
-
-
-    
-
-
-    <div class="feature-card feature-card--required zoom-in visible">
-        <div class="feature-card__content">
-
-            <div class="feature-card__left">
-                <div class="feature-icon">
-                    <img src="assets/img/blue-gate-confiscation-room-key.png" alt="Contributors">
-                </div>
-            </div>
-
-            <div class="feature-card__right">
-                <h3 class="feature-title"><span style="font-size:38px;color:#95efff">Looking For Contributor Roles:</span></h3>
-
-                <p class="feature-description">
-                    <span style="font-size:18px;color:#ffffff">
-                    Join our Discord to follow updates!<br> 
-                    Feel free to ask questions, and collaborate with the team.</span>
-                </p>
-
-                <p class="feature-description">
-                    <span style="font-size:18px;color:#ffffff">We are currently looking for:<br></span>
-                    <strong><span style="font-size:18px;color:#ff3636"> Staff Members | Model Creators | Developers | Designers | Artists</span></strong>
-                </p>
-
-                <a href="#how-it-works"
-                   class="btn btn-dark cta-btn-primary"
-                   target="_blank"
-                   rel="noopener noreferrer">
-
-                    <i class="fab fa-discord"></i>
-                    <span>Join Discord</span>
-                    <div class="btn-shine"></div>
-                </a>
-            </div>
-
-        </div>
-    </div>
-</section>
-    
+<!-- ── Region Selection Overlay ── -->
+<div id="region-overlay">
+  <canvas id="region-canvas"></canvas>
 </div>
 
-    <section class="team" id="team">
-        <div class="team-container">
-            <div class="section-title flip-in visible">
-                <h2><span style="font-size:30px;color:#ffffff">Meet Current The Team:</span></h2>
-                <p><span style="font-size:18px;color:#ffffff">The dedicated <br>Developers / Admins / Staff Members / Model Creator / Project Lead<br> involved in Starting / Activly Developing Midnight Bun Studios<br><br> Currently we are a passion Project team, Trying to make a games more User-Friendly!</span></p>
-            </div>
-            <div class="team-grid">
-                <div class="team-card scale-up visible">
-                    <div class="team-image">
-                        <img src="assets/img/42Oreobun.png" alt="42Oreobun">
-                    </div>
-                    <h3 class="team-name">42Oreobun</h3>
-                    <p class="team-role">Owner / Developer / Model Creator / Project Lead</p>
-                </div>
-                <div class="team-card scale-up visible">
-                    <div class="team-image">
-                        <img src="assets/img/BunnyOreo.png" alt="BunnyOreo">
-                    </div>
-                    <h3 class="team-name">BunnyOreo</h3>
-                    <p class="team-role">Co-Owner / Server Admin</p>
-                </div>   
-                <div class="team-card scale-up visible">
-                    <div class="team-image">
-                        <img src="assets/img/yukon.webp" alt="Chemical OverDose">
-                    </div>
-                    <h3 class="team-name">Chemical OverDose</h3>
-                    <p class="team-role">Server Admin</p>
-                </div>
-                <div class="team-card scale-up visible">
-                    <div class="team-image">
-                        <img src="assets/img/kett.webp" alt="Butternuts">
-                    </div>
-                    <h3 class="team-name">Butternuts</h3>
-                    <p class="team-role">Server Moderator</p>
-                </div>
-                 <div class="team-card scale-up visible">
-                    <div class="team-image">
-                        <img src="assets/img/trolley.webp" alt="TrolleyRolley">
-                    </div>
-                    <h3 class="team-name">TrolleyRolley</h3>
-                    <p class="team-role">Server Admin</p>
-                </div>
-                <div class="team-card scale-up visible">
-                    <div class="team-image">
-                        <img src="assets/img/ugly.webp" alt="UglyFiveTwo">
-                    </div>
-                    <h3 class="team-name">UglyFiveTwo</h3>
-                    <p class="team-role">Server Admin</p>
-                </div>
-           </div>
-        </div>
-    </section>
-    
+<!-- ── CDN Dependencies ── -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-    <section class="cta" id="cta">
-        <div class="cta-particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-                <div class="hero2-slider">
-            <div class="hero2-slide active"></div>
-            <div class="hero2-slide"></div>
-            <div class="hero2-slide"></div>
-            <div class="hero2-slide active"></div>
-        </div>
-        <div class="cta-container">
-            <div class="cta-content bounce-in">
-                <h2 class="cta-title">
-                    <span class="title-word2">Ready</span>
-                    <span class="title-word2">to</span>
-                    <span class="title-word2">Join</span>
-                    <span class="title-word2">the</span>
-                    <span class="title-word2">Build Process?</span>
-                </h2>
-                <p class="cta3-description slide-left">
-                    Site is in early stages of development, but feel free to join the discord and check out the map!
-                </p>
-                <div class="cta-buttons scale-up">
-                    <a href="https://discord.gg/hug2T2u" class="btn btn-dark cta-btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Join our Discord server to get started">
-                        <i class="fab fa-discord" aria-hidden="true"></i>
-                        <span>Join Discord</span>
-                        <div class="btn-shine" aria-hidden="true"></div>
-                    </a>
-                    <a href="#team" class="btn btn-secondary btn-secondary" aria-label="Learn more about how to get started">
-                        <i class="fas fa-info-circle" aria-hidden="true"></i>
-                        <span>Meet The Team</span>
-                        <div class="btn-shine" aria-hidden="true"></div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="cta-footer">
-            <div class="cta-footer-inner">
-                <p>© The Isle OCR Trackers - All rights reserved</p>
-                <nav class="cta-footer-links" aria-label="Legal links">
-                    <a href="" class="cta-footer-link-btn">Terms of Service</a>
-                    <a href="" class="cta-footer-link-btn">Privacy Policy</a>
-                </nav>
-            </div>
-        </div>
-    </section>
-
-
-
-
-
-
-    <button class="scroll-to-top" id="scrollToTop" aria-label="Scroll to top">
-        <i class="fas fa-chevron-up" aria-hidden="true"></i>
-    </button>
-
-
-    <div class="gallery-modal" id="galleryModal">
-        <div class="gallery-modal-content">
-            <button class="gallery-modal-close" id="galleryModalClose" aria-label="Close image viewer">×</button>
-            <button id="galleryModalPrev" class="gallery-modal-nav gallery-modal-prev" aria-label="Previous image">
-                <i class="fas fa-chevron-left" aria-hidden="true"></i>
-            </button>
-            <button id="galleryModalNext" class="gallery-modal-nav gallery-modal-next" aria-label="Next image">
-                <i class="fas fa-chevron-right" aria-hidden="true"></i>
-            </button>
-            <img id="galleryModalImage" src="" alt="">
-        </div>
-    </div>
-    -->
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
-    </script>
-<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;480c3a4197e547738d78871ccf9b009f&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous" style="display: none !important;"></script>
-
-
+<!-- ── App Scripts ── -->
+<script src="assets/ocr.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>
